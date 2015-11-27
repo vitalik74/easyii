@@ -3,6 +3,7 @@ use yii\db\Schema;
 use yii\easyii\models;
 
 use yii\easyii\modules\catalog;
+use yii\easyii\modules\multisite\models\Multisite;
 use yii\easyii\modules\shopcart;
 use yii\easyii\modules\article;
 use yii\easyii\modules\carousel\models\Carousel;
@@ -329,6 +330,14 @@ class m000000_000000_install extends \yii\db\Migration
         ], $this->engine);
         $this->createIndex('class', models\TagAssign::tableName(), 'class');
         $this->createIndex('item_tag', models\TagAssign::tableName(), ['item_id', 'tag_id']);
+
+        //Multi Sites
+        $this->createTable(Multisite::tableName(), [
+            'id' => Schema::TYPE_PK,
+            'domain' => Schema::TYPE_STRING . '(255) NOT NULL',
+            'name' => Schema::TYPE_STRING . '(255) NOT NULL',
+            'status' => Schema::TYPE_BOOLEAN . " DEFAULT '0'"
+        ]);
 
         //INSERT VERSION
         $this->delete(models\Setting::tableName(), ['name' => 'easyii_version']);
