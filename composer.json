@@ -1,7 +1,7 @@
 {
     "name": "vitalik74/easyii",
     "version": "dev-master",
-    "description": "Easy CMS based on Yii2 Framework - Development package",
+    "description": "Easy CMS based on Yii2 Framework - Development package fork",
     "keywords": ["easyii"],
     "homepage": "http://easyiicms.com",
     "type": "yii2-extension",
