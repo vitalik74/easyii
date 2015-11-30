@@ -11,11 +11,10 @@ class Multisite
 {
     public static $file = 'db.php';
     public static $folder = 'sites';
-    public static $dir = 'db.php';
 
-    public static function getDbConfig($path)
+    public static function getDbConfig($path, $domain = null)
     {
-        $domainDbConfig = $path . DIRECTORY_SEPARATOR . static::$folder . DIRECTORY_SEPARATOR . static::getDomain() . DIRECTORY_SEPARATOR . static::$file;
+        $domainDbConfig = $path . DIRECTORY_SEPARATOR . static::$folder . DIRECTORY_SEPARATOR . ($domain == null ? static::getDomain() : $domain) . DIRECTORY_SEPARATOR . static::$file;
 
         if (is_file($domainDbConfig) && file_exists($domainDbConfig)) {
             return $domainDbConfig;
