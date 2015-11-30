@@ -217,3 +217,8 @@ h4 b{
 .glyphicon-menu-hamburger:before {
   content: "\e055";
 }
+
+.nav-multisite {
+    width: 200px;
+    padding: 8px 0 0 8px;
+}

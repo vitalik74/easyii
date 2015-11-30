@@ -13,6 +13,6 @@ $module = $this->context->module->id;
             <?= Yii::t('easyii', 'List') ?>
         </a>
     </li>
-    <li <?= ($action === 'create') ? 'class="active"' : '' ?>><a href="<?= Url::to(['/admin/'.$module.'/a/create']) ?>"><?= Yii::t('easyii', 'Create') ?></a></li>
+    <li <?= ($action === 'database') ? 'class="active"' : '' ?>><a href="<?= Url::to(['/admin/'.$module.'/a/database']) ?>"><?= Yii::t('easyii/multisite', 'Structure database') ?></a></li>
 </ul>
 <br/>

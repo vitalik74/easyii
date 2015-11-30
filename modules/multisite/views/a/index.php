@@ -1,4 +1,5 @@
 <?php
+use yii\easyii\modules\multisite\models\Multisite;
 use yii\easyii\modules\news\models\News;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -10,37 +11,43 @@ $module = $this->context->module->id;
 
 <?= $this->render('_menu') ?>
 
-<?php if($data->count > 0) : ?>
+<?php if ($data->count > 0 && IS_ROOT) : ?>
     <table class="table table-hover">
         <thead>
         <tr>
-            <?php if(IS_ROOT) : ?>
-                <th width="50">#</th>
-            <?php endif; ?>
-            <th><?= Yii::t('easyii/multisite', 'Name') ?></th>
             <th width="120"><?= Yii::t('easyii/multisite', 'Domain') ?></th>
             <th width="100"><?= Yii::t('easyii', 'Status') ?></th>
             <th width="120"></th>
         </tr>
         </thead>
         <tbody>
-        <?php foreach($data->models as $item) : ?>
-            <tr data-id="<?= $item->primaryKey ?>">
-                <?php if(IS_ROOT) : ?>
-                    <td><?= $item->primaryKey ?></td>
-                <?php endif; ?>
-                <td><a href="<?= Url::to(['/admin/'.$module.'/a/edit/', 'id' => $item->primaryKey]) ?>"><?= $item->name ?></a></td>
-                <td><?= $item->domain ?></td>
+        <?php foreach ($data->models as $key => $item) : ?>
+            <tr data-id="<?= $key ?>">
+                <td><?= $item['domain'] ?></td>
                 <td class="status">
-                    <?= Html::checkbox('', $item->status == News::STATUS_ON, [
-                        'class' => 'switch',
-                        'data-id' => $item->primaryKey,
-                        'data-link' => Url::to(['/admin/'.$module.'/a']),
-                    ]) ?>
+                    <?php
+                    if ($item['domain'] != Multisite::DEFAULT_DOMAIN) {
+                    ?>
+                        <?= Html::checkbox('', $item['status'] == Multisite::STATUS_ON, [
+                            'class' => 'switch',
+                            'data-id' => crc32($item['domain']),
+                            'data-link' => Url::to(['/admin/' . $module . '/a']),
+                        ]) ?>
+                    <?php
+                    }
+                    ?>
                 </td>
                 <td>
                     <div class="btn-group btn-group-sm" role="group">
-                        <a href="<?= Url::to(['/admin/'.$module.'/a/delete', 'id' => $item->primaryKey]) ?>" class="btn btn-default confirm-delete" title="<?= Yii::t('easyii', 'Delete item') ?>"><span class="glyphicon glyphicon-remove"></span></a>
+                    <?php
+                    if ($item['domain'] != Multisite::DEFAULT_DOMAIN) {
+                    ?>
+                        <a href="<?= Url::to(['/admin/' . $module . '/a/delete', 'id' => crc32($item['domain'])]) ?>"
+                           class="btn btn-default confirm-delete" title="<?= Yii::t('easyii', 'Delete item') ?>"><span
+                                class="glyphicon glyphicon-remove"></span></a>
+                    <?php
+                    }
+                    ?>
                     </div>
                 </td>
             </tr>

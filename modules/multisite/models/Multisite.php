@@ -3,21 +3,22 @@
 namespace yii\easyii\modules\multisite\models;
 
 use Yii;
-use yii\easyii\behaviors\CacheFlush;
-use yii\easyii\behaviors\SortableModel;
-use yii\easyii\components\ActiveRecord;
+use yii\easyii\components\Model;
+use yii\helpers\ArrayHelper;
 
-class Multisite extends ActiveRecord
+class Multisite extends Model
 {
-    const STATUS_OFF = 0;
-    const STATUS_ON = 1;
+    const STATUS_OFF = 'disabled-';
+    const STATUS_ON = '';
 
     const CACHE_KEY = 'easyii_multisite';
 
-    public static function tableName()
-    {
-        return 'easyii_multisite';
-    }
+    const DEFAULT_DOMAIN = 'default';
+
+    const SESSION_DOMAIN_KEY = 'easyii_domain';
+
+    public $domain;
+    public $status;
 
     public function rules()
     {
@@ -25,7 +26,6 @@ class Multisite extends ActiveRecord
             [['domain', 'name'], 'required'],
             [['domain', 'name'], 'trim'],
             [['domain'], 'url', 'defaultScheme' => null, 'pattern' => '/^(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)/i'],
-            [['name'], 'string', 'max' => 255],
             ['status', 'integer'],
             ['status', 'default', 'value' => self::STATUS_ON],
         ];
@@ -35,15 +35,50 @@ class Multisite extends ActiveRecord
     {
         return [
             'domain' => Yii::t('easyii/multisite', 'Domain'),
-            'name' => Yii::t('easyii/multisite', 'Name'),
-            'status' => Yii::t('easyii/multisite', 'Status'),
+            'status' => Yii::t('easyii/multisite', 'Status')
         ];
     }
 
-    public function behaviors()
+    public function save()
     {
-        return [
-            CacheFlush::className()
-        ];
+        if ($this->validate()) {
+
+        }
+
+        return false;
+    }
+
+    public function changeStatus($status)
+    {
+        if ($status == static::STATUS_OFF) {
+            return \yii\easyii\helpers\Multisite::changeDbConfig($this->domain, true);
+        }
+
+        return \yii\easyii\helpers\Multisite::changeDbConfig($this->domain, false);
+    }
+
+    public static function find($id = null)
+    {
+        if (!empty($id)) {
+            $domains = \yii\easyii\helpers\Multisite::getDomains();
+
+            $key = array_search($id, array_column($domains, 'crc'));
+
+            if (isset($domains[$key]) && !empty($domains[$key])) {
+                $model = new static();
+                $model->setAttributes($domains[$key]);
+
+                return $model;
+            }
+
+            return null;
+        }
+
+        return \yii\easyii\helpers\Multisite::getDomains();
+    }
+
+    public function delete()
+    {
+        return \yii\easyii\helpers\Multisite::deleteDomain($this->domain);
     }
 }

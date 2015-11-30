@@ -4,23 +4,15 @@ namespace yii\easyii\modules\multisite\controllers;
 use Yii;
 use yii\data\ActiveDataProvider;
 
+use yii\data\ArrayDataProvider;
 use yii\easyii\behaviors\StatusController;
 use yii\easyii\components\Controller;
+use yii\easyii\modules\multisite\models\DatabaseForm;
 use yii\easyii\modules\multisite\models\Multisite;
 use yii\widgets\ActiveForm;
 
 class AController extends Controller
 {
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => StatusController::className(),
-                'model' => Multisite::className()
-            ]
-        ];
-    }
-
     public function init()
     {
         parent::init();
@@ -28,8 +20,8 @@ class AController extends Controller
 
     public function actionIndex()
     {
-        $data = new ActiveDataProvider([
-            'query' => Multisite::find()->desc(),
+        $data = new ArrayDataProvider([
+            'allModels' => Multisite::find(),
         ]);
 
         return $this->render('index', [
@@ -37,18 +29,9 @@ class AController extends Controller
         ]);
     }
 
-    public function actionView($id)
+    public function actionDatabase()
     {
-        $model = $this->findModel($id);
-
-        return $this->render('view', [
-            'model' => $model
-        ]);
-    }
-
-    public function actionCreate()
-    {
-        $model = new Multisite();
+        $model = new DatabaseForm();
 
         if ($model->load(Yii::$app->request->post())) {
             if (Yii::$app->request->isAjax) {
@@ -57,34 +40,7 @@ class AController extends Controller
                 return ActiveForm::validate($model);
             } else {
                 if ($model->save()) {
-                    $this->flash('success', Yii::t('easyii/multisite', 'Site created'));
-
-                    return $this->redirect(['/admin/' . $this->module->id]);
-                } else {
-                    $this->flash('error', Yii::t('easyii', 'Create error. {0}', $model->formatErrors()));
-
-                    return $this->refresh();
-                }
-            }
-        } else {
-            return $this->render('create', [
-                'model' => $model
-            ]);
-        }
-    }
-
-    public function actionEdit($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post())) {
-            if (Yii::$app->request->isAjax) {
-                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-
-                return ActiveForm::validate($model);
-            } else {
-                if ($model->save()) {
-                    $this->flash('success', Yii::t('easyii/news', 'News updated'));
+                    $this->flash('success', Yii::t('easyii/multisite', 'Structure database from {0} copy fo {1}', [$model->domain, $model->domainCopy]));
                 } else {
                     $this->flash('error', Yii::t('easyii', 'Update error. {0}', $model->formatErrors()));
                 }
@@ -92,7 +48,7 @@ class AController extends Controller
                 return $this->refresh();
             }
         } else {
-            return $this->render('edit', [
+            return $this->render('database', [
                 'model' => $model
             ]);
         }
@@ -108,29 +64,25 @@ class AController extends Controller
 
     public function actionOn($id)
     {
-        return $this->changeStatus($id, Multisite::STATUS_ON);
+        $model = $this->findModel($id);
+
+        return $model->changeStatus(Multisite::STATUS_ON);
     }
 
     public function actionOff($id)
     {
-        $models = Multisite::findAll(['status' => Multisite::STATUS_ON, ['not in', 'id', [$id]]]);
+        $model = $this->findModel($id);
 
-        if (count($models) <= 1) {
-            $this->flash('error', Yii::t('easyii/multisite', 'Last site not change to off'));
-
-            return $this->refresh();
-        }
-
-        return $this->changeStatus($id, Multisite::STATUS_OFF);
+        return $model->changeStatus(Multisite::STATUS_OFF);
     }
 
     /**
-     * @param $id
+     * @param $domain
      * @return Multisite|\yii\web\Response|static
      */
-    protected function findModel($id)
+    protected function findModel($domain)
     {
-        $model = Multisite::findOne($id);
+        $model = Multisite::find($domain);
 
         if ($model === null) {
             $this->flash('error', Yii::t('easyii', 'Not found'));
