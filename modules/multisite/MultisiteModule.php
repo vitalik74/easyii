@@ -12,6 +12,6 @@ class MultisiteModule extends \yii\easyii\components\Module
             'ru' => 'Сайты',
         ],
         'icon' => 'globe',
-        'order_num' => 130,
+        'order_num' => 5,
     ];
 }
