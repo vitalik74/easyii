@@ -9,18 +9,30 @@ use yii\easyii\modules\multisite\models\Multisite as MultisiteModel;
 
 class Multisite
 {
-    public static $file = 'db.php';
+    public static $dbFile = 'db.php';
+    public static $themeFile = 'theme.php';
     public static $folder = 'sites';
 
     public static function getDbConfig($path, $domain = null)
     {
-        $domainDbConfig = $path . DIRECTORY_SEPARATOR . static::$folder . DIRECTORY_SEPARATOR . ($domain == null ? static::getDomain() : $domain) . DIRECTORY_SEPARATOR . static::$file;
+        $domainDbConfig = $path . DIRECTORY_SEPARATOR . static::$folder . DIRECTORY_SEPARATOR . ($domain == null ? static::getDomain() : $domain) . DIRECTORY_SEPARATOR . static::$dbFile;
 
         if (is_file($domainDbConfig) && file_exists($domainDbConfig)) {
             return $domainDbConfig;
         }
 
-        return $path . DIRECTORY_SEPARATOR . static::$file;
+        return $path . DIRECTORY_SEPARATOR . static::$dbFile;
+    }
+
+    public static function getThemeConfig($path)
+    {
+        $domainThemeConfig = $path . DIRECTORY_SEPARATOR . static::$folder . DIRECTORY_SEPARATOR . static::getDomain() . DIRECTORY_SEPARATOR . static::$themeFile;
+
+        if (is_file($domainThemeConfig) && file_exists($domainThemeConfig)) {
+            return $domainThemeConfig;
+        }
+
+        return $path . DIRECTORY_SEPARATOR . static::$themeFile;
     }
 
     public static function getDomains()
@@ -37,7 +49,7 @@ class Multisite
         if (is_dir($dir)) {
             $tmp = FileHelper::findFiles($dir);
             $tmp = array_map(function ($v) use ($dir) {
-                $domain = str_replace([$dir, static::$file, DIRECTORY_SEPARATOR, MultisiteModel::STATUS_OFF], '', $v);
+                $domain = str_replace([$dir, static::$dbFile, DIRECTORY_SEPARATOR, MultisiteModel::STATUS_OFF], '', $v);
 
                 return [
                     'status' => strpos($v, MultisiteModel::STATUS_OFF) !== false ? MultisiteModel::STATUS_OFF : MultisiteModel::STATUS_ON,
@@ -84,12 +96,12 @@ class Multisite
 
     public static function changeDbConfig($domain, $unavailable)
     {
-        $file = static::$file;
+        $file = static::$dbFile;
         $newFile = MultisiteModel::STATUS_OFF . $file;
 
         if (!$unavailable) {
-            $file = MultisiteModel::STATUS_OFF . static::$file;
-            $newFile = static::$file;
+            $file = MultisiteModel::STATUS_OFF . static::$dbFile;
+            $newFile = static::$dbFile;
         }
 
         return static::rename($domain, $file, $newFile);
