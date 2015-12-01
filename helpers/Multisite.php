@@ -47,7 +47,7 @@ class Multisite
         ];
 
         if (is_dir($dir)) {
-            $tmp = FileHelper::findFiles($dir);
+            $tmp = FileHelper::findFiles($dir, ['only' => [static::$dbFile]]);
             $tmp = array_map(function ($v) use ($dir) {
                 $domain = str_replace([$dir, static::$dbFile, DIRECTORY_SEPARATOR, MultisiteModel::STATUS_OFF], '', $v);
 
