@@ -72,12 +72,8 @@ class Multisite
 
     public static function getDomainFromSession()
     {
-        if(!isset($_SESSION)){
-            session_start();
-        }
-
-        if (isset($_SESSION[MultisiteModel::SESSION_DOMAIN_KEY]) && !empty($_SESSION[MultisiteModel::SESSION_DOMAIN_KEY])) {
-            return $_SESSION[MultisiteModel::SESSION_DOMAIN_KEY];
+        if (isset($_COOKIE[MultisiteModel::COOKIE_DOMAIN_KEY]) && !empty($_COOKIE[MultisiteModel::COOKIE_DOMAIN_KEY])) {
+            return $_COOKIE[MultisiteModel::COOKIE_DOMAIN_KEY];
         }
 
         return null;

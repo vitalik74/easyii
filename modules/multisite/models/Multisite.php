@@ -15,7 +15,7 @@ class Multisite extends Model
 
     const DEFAULT_DOMAIN = 'default';
 
-    const SESSION_DOMAIN_KEY = 'easyii_domain';
+    const COOKIE_DOMAIN_KEY = 'easyii_domain';
 
     public $domain;
     public $status;
