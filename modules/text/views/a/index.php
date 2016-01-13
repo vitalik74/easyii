@@ -30,7 +30,7 @@ $module = $this->context->module->id;
                 <?php endif; ?>
                 <td><a href="<?= Url::to(['/admin/'.$module.'/a/edit', 'id' => $item->primaryKey]) ?>"><?= $item->text ?></a></td>
                 <?php if(IS_ROOT) : ?>
-                    <td><?= $item->slug ?></td>
+                    <td><a href="<?= Url::to(['/admin/'.$module.'/a/edit', 'id' => $item->primaryKey]) ?>"><?= $item->slug ?></a></td>
                     <td><a href="<?= Url::to(['/admin/'.$module.'/a/delete', 'id' => $item->primaryKey]) ?>" class="glyphicon glyphicon-remove confirm-delete" title="<?= Yii::t('easyii', 'Delete item') ?>"></a></td>
                 <?php endif; ?>
             </tr>
