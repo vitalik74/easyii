@@ -22,9 +22,9 @@ class Text extends API
     {
         parent::init();
 
-        $this->_texts = Data::cache(TextModel::CACHE_KEY, 3600, function(){
-            return TextModel::find()->asArray()->all();
-        });
+        $this->_texts = /*Data::cache(TextModel::CACHE_KEY, 3600, function(){
+            return */TextModel::find()->asArray()->all();
+        /*})*/;
     }
 
     public function api_get($id_slug)
