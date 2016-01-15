@@ -16,8 +16,7 @@ use yii\easyii\widgets\SeoForm;
         'imageUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'pages']),
         'fileUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'pages']),
         'plugins' => ['fullscreen'],
-        'paragraphize' => false,
-        'replaceDivs' => false
+        'convertDivs' => false,
     ]
 ]) ?>
 
