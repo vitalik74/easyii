@@ -15,7 +15,9 @@ use yii\easyii\widgets\SeoForm;
         'minHeight' => 400,
         'imageUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'pages']),
         'fileUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'pages']),
-        'plugins' => ['fullscreen']
+        'plugins' => ['fullscreen'],
+        'paragraphize' => false,
+        'replaceDivs' => false
     ]
 ]) ?>
 
