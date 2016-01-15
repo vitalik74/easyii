@@ -65,14 +65,14 @@ class Multisite
 
     public static function getDomain()
     {
-        $domainFromSession = static::getDomainFromSession();
+        $domainFromCookie = static::getDomainFromCookie();
 
-        return $domainFromSession ?: $_SERVER['HTTP_HOST'];
+        return $domainFromCookie ?: $_SERVER['HTTP_HOST'];
     }
 
-    public static function getDomainFromSession()
+    public static function getDomainFromCookie()
     {
-        if (isset($_COOKIE[MultisiteModel::COOKIE_DOMAIN_KEY]) && !empty($_COOKIE[MultisiteModel::COOKIE_DOMAIN_KEY])) {
+        if (strpos($_SERVER['REQUEST_URI'], '/admin/') === 0 && isset($_COOKIE[MultisiteModel::COOKIE_DOMAIN_KEY]) && !empty($_COOKIE[MultisiteModel::COOKIE_DOMAIN_KEY])) {
             return $_COOKIE[MultisiteModel::COOKIE_DOMAIN_KEY];
         }
 

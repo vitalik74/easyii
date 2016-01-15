@@ -31,7 +31,7 @@ $moduleName = $this->context->module->id;
                 <div class="nav">
                     <a href="<?= Url::to(['/']) ?>" class="pull-left"><i class="glyphicon glyphicon-home"></i> <?= Yii::t('easyii', 'Open site') ?></a>
                     <div class="pull-left nav-multisite">
-                        <?= Html::dropDownList('', \yii\easyii\helpers\Multisite::getDomainFromSession(), ArrayHelper::map(\yii\easyii\helpers\Multisite::getDomains(), 'domain', 'domain'), ['class' => 'form-control', 'prompt' => Yii::t('easyii', 'Select site'), 'onChange' => 'location.href = "/admin/default/change-site?domain=" + this.value']) ?>
+                        <?= Html::dropDownList('', \yii\easyii\helpers\Multisite::getDomainFromCookie(), ArrayHelper::map(\yii\easyii\helpers\Multisite::getDomains(), 'domain', 'domain'), ['class' => 'form-control', 'prompt' => Yii::t('easyii', 'Select site'), 'onChange' => 'location.href = "/admin/default/change-site?domain=" + this.value']) ?>
                     </div>
 
                     <a href="<?= Url::to(['/admin/sign/out']) ?>" class="pull-right"><i class="glyphicon glyphicon-log-out"></i> <?= Yii::t('easyii', 'Logout') ?></a>
