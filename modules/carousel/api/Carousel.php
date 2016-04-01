@@ -25,7 +25,9 @@ class Carousel extends API
     {
         parent::init();
 
-        $this->_items = Data::cache(CarouselModel::CACHE_KEY, 3600, function(){
+        $cacheKey =  CarouselModel::CACHE_KEY.$_SERVER['SERVER_NAME'];
+
+        $this->_items = Data::cache($cacheKey, 3600, function(){
             $items = [];
             foreach(CarouselModel::find()->status(CarouselModel::STATUS_ON)->sort()->all() as $item){
                 $items[] = new CarouselObject($item);

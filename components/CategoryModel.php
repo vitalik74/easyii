@@ -96,7 +96,7 @@ class CategoryModel extends \yii\easyii\components\ActiveRecord
     public static function tree()
     {
         $cache = Yii::$app->cache;
-        $key = static::tableName().'_tree';
+        $key = $_SERVER['SERVER_NAME'].static::tableName().'_tree';
 
         $tree = $cache->get($key);
         if(!$tree){
@@ -113,7 +113,7 @@ class CategoryModel extends \yii\easyii\components\ActiveRecord
     public static function cats()
     {
         $cache = Yii::$app->cache;
-        $key = static::tableName().'_flat';
+        $key = $_SERVER['SERVER_NAME'].static::tableName().'_flat';
 
         $flat = $cache->get($key);
         if(!$flat){
